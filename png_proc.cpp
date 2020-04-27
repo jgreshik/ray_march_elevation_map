@@ -1,9 +1,10 @@
+// http://zarb.org/~gc/html/libpng.html
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
 #include "png_proc.h"
 
-void PNGProcessor::read_png_file(char *filename) {
+void PNGProc::read_png_file(char *filename) {
     FILE *fp = fopen(filename, "rb");
 
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -65,7 +66,7 @@ void PNGProcessor::read_png_file(char *filename) {
     png_destroy_read_struct(&png, &info, NULL);
 }
 
-void PNGProcessor::write_png_file(char *filename) {
+void PNGProc::write_png_file(char *filename) {
     FILE *fp = fopen(filename, "wb");
     if(!fp) abort();
 
@@ -111,7 +112,7 @@ void PNGProcessor::write_png_file(char *filename) {
     png_destroy_write_struct(&png, &info);
 }
 
-void PNGProcessor::process_png_file() {
+void PNGProc::process_png_file(float*elev) {
     for(int y = 0; y < height; y++) {
         png_bytep row = row_pointers[y];
         for(int x = 0; x < width; x++) {
@@ -120,11 +121,11 @@ void PNGProcessor::process_png_file() {
                 // Do something awesome for each pixel here...
                 printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
             }
-            png_bytep px = &(row[x * 4]);
-            int temp=px[0];
-            row[x*4]=px[2];
-            row[x*4+2]=temp;
+            //png_bytep px = &(row[x * 4]);
+            //int temp=px[0];
+            //row[x*4]=px[2];
+            //row[x*4+2]=temp;
+            row[x*4+3]=(int)(row[x*4+3]*elev[width*y+x]);
         }
     }
 }
-

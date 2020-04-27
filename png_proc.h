@@ -1,9 +1,9 @@
 #ifndef PNG_PROC_H
 #define PNG_PROC_H
-
+// http://zarb.org/~gc/html/libpng.html
 #include <png.h>
 
-class PNGProcessor{
+class PNGProc{
     public:
         int width, height;
         png_byte color_type;
@@ -12,7 +12,7 @@ class PNGProcessor{
 
         void read_png_file(char *filename);
         void write_png_file(char *filename);
-        void process_png_file();
+        void process_png_file(float* k);
 };
 
 #endif
