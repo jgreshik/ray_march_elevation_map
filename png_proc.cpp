@@ -112,19 +112,44 @@ void PNGProc::write_png_file(char *filename) {
     png_destroy_write_struct(&png, &info);
 }
 
+void PNGProc::set_pixel(double red, double green, double blue, int x, int y) {
+    png_bytep row = row_pointers[y];
+    png_bytep px = &(row[x * 4]);
+    px[0]=red;//pix.x;
+    px[1]=green;//pix.y;
+    px[2]=blue;//pix.z;
+    px[3]=255;
+}
+
+vec PNGProc::get_pixel(int i, int j) {
+    png_bytep row = row_pointers[j];
+    png_bytep px = &(row[i * 4]);
+    vec ret;
+    ret.x=double(px[0])/255;
+    ret.y=double(px[1])/255;
+    ret.z=double(px[2])/255;
+    return ret;
+}
+
+void PNGProc::allo_mem() {
+    row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+    for(int y = 0; y < height; y++) {
+        row_pointers[y] = (png_byte*)malloc(sizeof(png_bytep) * width);
+    }
+}
+
 void PNGProc::process_png_file(float*elev) {
     for(int y = 0; y < height; y++) {
         png_bytep row = row_pointers[y];
         for(int x = 0; x < width; x++) {
             if (y%(height-1)==0 && x%(width-1)==0){
                 png_bytep px = &(row[x * 4]);
-                // Do something awesome for each pixel here...
                 printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
             }
-            //png_bytep px = &(row[x * 4]);
-            //int temp=px[0];
-            //row[x*4]=px[2];
-            //row[x*4+2]=temp;
+            png_bytep px = &(row[x * 4]);
+            int temp=px[0];
+            row[x*4]=px[2];
+            row[x*4+2]=temp;
             row[x*4+3]=(int)(row[x*4+3]*elev[width*y+x]);
         }
     }
