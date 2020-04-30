@@ -4,7 +4,7 @@ INC_FLAGS := /usr/lib/
 # GENCODE for gpu server
 #GENCODE := -gencode arch=compute_70,code=compute_70 -gencode arch=compute_75,code=compute_75
 # GENCODE for isengard server
-GENCODE := -gencode arch=compute_35,code=compute_35 
+GENCODE := --expt-relaxed-constexpr -gencode arch=compute_35,code=compute_35 
 
 .phony: clean all release
 

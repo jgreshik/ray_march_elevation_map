@@ -5,7 +5,7 @@
 #include "png_proc.h"
 
 float elev_function(float x, float z){
-    return sin(x)*sin(z);
+    return 0;//sin(x)*sin(z);
 }
 
 vec raymarch(vec pix_pos,vec pix_dir){

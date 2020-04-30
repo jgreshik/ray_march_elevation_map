@@ -6,7 +6,7 @@
 // -use_fast_math compiler flag 
 
 __device__ double elev_function(double x, double z){
-    return sin(x)*sin(z);
+    return 0;//sin(x)*sin(z);
 }
 
 __device__ double3 raymarch(double3 pix_pos, double3 pix_dir){
@@ -35,10 +35,8 @@ __device__ double3 raymarch(double3 pix_pos, double3 pix_dir){
     return no_val;
 }
 
-__global__ void color_pixels(uint1*in_png, int in_width, int in_height, 
-        uint1*out_png, int out_width, int out_height){
-
-    int NUM_THREADS=32;
+__global__ void color_pixels(unsigned int*in_png, int in_width, int in_height, 
+        unsigned int*out_png, int out_width, int out_height){
 
     int i=blockIdx.x*NUM_THREADS+threadIdx.x;
     int j=blockIdx.y*NUM_THREADS+threadIdx.y;
@@ -114,29 +112,19 @@ __global__ void color_pixels(uint1*in_png, int in_width, int in_height,
 
     double3 pos=raymarch(pix_pos,pix_dir);
 
-    unsigned int img_world_i=pos.x/5.*in_width;
-    unsigned int img_world_j=pos.z/5.*in_height;
-    img_world_i=img_world_i%(in_width);
-    img_world_j=img_world_j%(in_height);
+    int img_world_i=pos.x/5.*in_width;
+    int img_world_j=pos.z/5.*in_height;
+    img_world_i=abs(img_world_i)%(in_width);
+    img_world_j=abs(img_world_j)%(in_height);
 
-    //vec image_color=in_png.get_pixel(img_world_i,img_world_j);
-//    return length(pos)<100?vec(abs(pos.x)/5,0,abs(pos.z)/5):vec(0,0,0);
-    //return length(pos)<100?image_color:vec(0,0,0);
+    int buffer=5;
+    int line_thresh=3;
+    double grid = double(in_width) / double(buffer);
 
-    //int buffer=5;
-    //int line_thresh=3;
-    //double3 grid_color = vec(0,0,0);
-    //double grid = double(width) / double(buffer);
-    //if (fmod(i,grid)<line_thresh || fmod(j,grid)<line_thresh) return grid_color;
-    //png_bytep row = row_pointers[j];
-    //png_bytep px = &(row[i * 4]);
-    //vec ret;
-    //ret.x=double(px[0])/255;
-    //ret.y=double(px[1])/255;
-    //ret.z=double(px[2])/255;
     unsigned int alpha_zeros=0xFF000000;
-    if (pos.x>9999) memcpy(&out_png[j*out_width+i],&alpha_zeros,sizeof(unsigned int));
-    else memcpy(&out_png[j*out_width+i],&in_png[img_world_j*in_width+img_world_i],sizeof(uint1));
+    if (fmod(img_world_i,grid)<line_thresh || fmod(img_world_j,grid)<line_thresh) memcpy(&out_png[j*out_width+i],&alpha_zeros,sizeof(unsigned int));
+    else if (pos.x>9999) memcpy(&out_png[j*out_width+i],&alpha_zeros,sizeof(unsigned int));
+    else memcpy(&out_png[j*out_width+i],&in_png[img_world_j*in_width+img_world_i],sizeof(unsigned int));
 }
 
 //__global__ void color_out(PNGProc in_png,PNGProc out_png){

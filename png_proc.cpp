@@ -148,28 +148,39 @@ void PNGProc::allo_mem() {
 
 void PNGProc::png_to_uint_array(unsigned int*data_array){
     for(int y = 0; y < height; y++) {
-        png_bytep row_add = row_pointers[y];
-        memcpy(&data_array[y*width],&row_add,sizeof(unsigned char)*width);
+        png_bytep row = row_pointers[y];
+        for(int x = 0; x < width; x++) {
+            png_bytep px = &(row[x * 4]);
+            memcpy(&data_array[y*width+x],px,sizeof(unsigned int));
+        }
     }
 }
 
 void PNGProc::uint_array_to_png(unsigned int*data_array){
     for(int y = 0; y < height; y++) {
-        png_bytep row_add = row_pointers[y];
-        memcpy(&row_add,&data_array[y*width],sizeof(unsigned char)*width);
+        png_bytep row = row_pointers[y];
+        for(int x = 0; x < width; x++) {
+            png_bytep px = &(row[x * 4]);
+            memcpy(px,&data_array[y*width+x],sizeof(unsigned int));
+        }
     }
 }
 
+//            png_bytep px = &(row[x * 4]);
+//            unsigned int b=0xFF0000FF;
+//            row[x*4]=(data_array[y*width+x]&0xFF000000)>>24;// 255;
+//            row[x*4+1]=(data_array[y*width+x]&0x00FF0000)>>16;//0;
+//            row[x*4+2]=(data_array[y*width+x]&0x0000FF00)>>8;//255;
+//            row[x*4+3]=255;
 void PNGProc::process_png_file() {
     for(int y = 0; y < height; y++) {
         png_bytep row = row_pointers[y];
         for(int x = 0; x < width; x++) {
             if (y%(height-1)==0 && x%(width-1)==0){
                 //png_bytep px = &(row[x * 4]);
-                for (int k = 0 ; k < 4; ++k){
-                    unsigned int b = row[k];
-                    printf("%4d, %4d = RGBA(%3d)\n", x, y, b);
-                }
+                unsigned int b;
+                memcpy(&b,&row[y*width+x],4);
+                printf("%4d, %4d = %u\n", x, y, b);
                 //printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
             }
 //            png_bytep px = &(row[x * 4]);
