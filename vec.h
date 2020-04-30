@@ -32,6 +32,22 @@ struct vec{
         ret.z=z-b.z;
         return ret;
     }
+    bool operator ==(vec b)
+    {
+        double tolerance=1e-6;
+        if (x>b.x+tolerance || x<b.x-tolerance) return false;
+        if (y>b.y+tolerance || y<b.y-tolerance) return false;
+        if (z>b.z+tolerance || z<b.z-tolerance) return false;
+        return true;
+    }
+    vec operator /(double b)
+    {
+        vec ret;
+        ret.x=x/b;
+        ret.y=y/b;
+        ret.z=z/b;
+        return ret;
+    }
     vec operator *(double b)
     {
         vec ret;

@@ -16,5 +16,6 @@ double length(vec a){
     return sqrt(a.x*a.x+a.y*a.y+a.z*a.z);
 }
 vec normalize(vec a){
+    if(a==vec(0,0,0)) return vec(0,0,0);
     return a*(1/length(a));
 }

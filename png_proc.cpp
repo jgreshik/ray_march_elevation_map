@@ -1,5 +1,6 @@
 // http://zarb.org/~gc/html/libpng.html
 #include <stdlib.h>
+#include <cmath>
 #include <stdio.h>
 #include <png.h>
 #include "png_proc.h"
@@ -112,16 +113,21 @@ void PNGProc::write_png_file(char *filename) {
     png_destroy_write_struct(&png, &info);
 }
 
-void PNGProc::set_pixel(double red, double green, double blue, int x, int y) {
+void PNGProc::set_pixel(vec color, int x, int y) {
     png_bytep row = row_pointers[y];
     png_bytep px = &(row[x * 4]);
-    px[0]=red;//pix.x;
-    px[1]=green;//pix.y;
-    px[2]=blue;//pix.z;
+    px[0]=double(color.x);
+    px[1]=double(color.y);
+    px[2]=double(color.z);
     px[3]=255;
 }
 
 vec PNGProc::get_pixel(int i, int j) {
+    int buffer=5;
+    int line_thresh=3;
+    vec grid_color = vec(0,0,0);
+    double grid = double(width) / double(buffer);
+    if (fmod(i,grid)<line_thresh || fmod(j,grid)<line_thresh) return grid_color;
     png_bytep row = row_pointers[j];
     png_bytep px = &(row[i * 4]);
     vec ret;

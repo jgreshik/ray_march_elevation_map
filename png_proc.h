@@ -13,7 +13,7 @@ class PNGProc{
 
 
         void allo_mem();
-        void set_pixel(double red, double green, double blue, int i, int j);
+        void set_pixel(vec color, int i, int j);
         vec get_pixel(int i, int j);
         void read_png_file(char *filename);
         void write_png_file(char *filename);

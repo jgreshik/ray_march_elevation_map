@@ -7,7 +7,8 @@
 #include "png_proc.h"
 #include "vec.h"
 
-#define MAXSTEPS = 255 // change with dt
+#define MAXDIST = 50 // change with dt
+
 float elev_function(float x, float z){
     return sin(x)*sin(z);
 }
@@ -19,7 +20,7 @@ double scenesdf(vec pos){
     
     return m;
 }
-bool raymarch(vec pix_pos,vec pix_dir){
+bool raymarch_test(vec pix_pos,vec pix_dir){
     vec pos;
     pos.x=pix_pos.x;
     pos.y=pix_pos.y;
@@ -33,11 +34,11 @@ bool raymarch(vec pix_pos,vec pix_dir){
     }
     return false;
 }
-vec raymarch2(vec pix_pos,vec pix_dir){
+vec raymarch(vec pix_pos,vec pix_dir){
     double mint=.001;
-    double maxt=15;
     double dt=.01;
-    for(double t=mint;t<maxt;t+=dt){
+    double max_dist=50;
+    for(double t=mint;t<max_dist;t+=dt){
         vec pos=pix_pos+pix_dir*t;
         double v=elev_function(pos.x,pos.z);
         if(pos.y<v)return pos;
@@ -53,7 +54,7 @@ vec color_pixel(int i,int j, PNGProc in_png, PNGProc out_png){
     x*=2;
     y*=-2;
 
-    vec eye(8,2,0);
+    vec eye(3,4,3);
     vec lookat(0,0,0);
 
     vec eye_dir=normalize(lookat-eye);
@@ -61,13 +62,13 @@ vec color_pixel(int i,int j, PNGProc in_png, PNGProc out_png){
     double pi = 3.14159265358979323846;
     double fov=pi/2;
     vec pix_pos=eye+eye_dir*(focal_length);
-    vec up(0,1,0);
+    vec up=vec(-eye_dir.x*eye_dir.y,1-eye_dir.y*eye_dir.y,-eye_dir.z*eye_dir.y)/sqrt(1-eye_dir.y*eye_dir.y);
     vec right=cross(eye_dir,up);
     pix_pos=pix_pos+right*tan(fov/2)*x*abs(focal_length);
     pix_pos=pix_pos+up*tan(fov/2)*y*abs(focal_length);
     vec pix_dir=normalize(pix_pos-eye);
 
-    vec pos=raymarch2(pix_pos,pix_dir);
+    vec pos=raymarch(pix_pos,pix_dir);
     int img_world_i=pos.x/5.*in_png.width;
     int img_world_j=pos.z/5.*in_png.height;
     img_world_i=abs(img_world_i)%(in_png.width);
@@ -90,10 +91,10 @@ void color(PNGProc in_png,PNGProc out_png){
     for(int y = 0; y < out_png.height; y++) {
         for(int x = 0; x < out_png.width; x++) {
             vec v=color_pixel(x,y,in_png,out_png);
-            double red=255*v.x;
-            double green=255*v.y;
-            double blue=255*v.z;
-            out_png.set_pixel(red,green,blue,x,y);
+            //double red=255*v.x;
+            //double green=255*v.y;
+            //double blue=255*v.z;
+            out_png.set_pixel(v*255,x,y);
         }
     }
 }
