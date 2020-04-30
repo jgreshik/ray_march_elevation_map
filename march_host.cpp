@@ -3,18 +3,21 @@
 
 #include "vec.h"
 #include "png_proc.h"
+#include "util.h"
 
 float elev_function(float x, float z){
-    return 0;//sin(x)*sin(z);
+//    return 0;
+    return sin(x)*sin(z);
 }
 
 vec raymarch(vec pix_pos,vec pix_dir){
-    double mint=.001;
-    double dt=.01;
-    double max_dist=50;
+    double mint=MIN_T;
+    double dt=DT;
+    double max_dist=MAX_DIST;
     for(double t=mint;t<max_dist;t+=dt){
         vec pos=pix_pos+pix_dir*t;
         double v=elev_function(pos.x,pos.z);
+        dt*=CONSTANT_FACTOR;
         if(pos.y<v)return pos;
     }
     return vec(1000,1000,1000);

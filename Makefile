@@ -19,10 +19,10 @@ main: main.o march_kernel.o march_host.o png_proc.o vec.o
 main.o: main.cu march_kernel.o march_host.o png_proc.o vec.o
 	$(CXX) -c $@ $^ $(GENCODE) 
 
-march_kernel.o: march_kernel.cu march_kernel.h
+march_kernel.o: march_kernel.cu march_kernel.h util.h
 	$(CXX) -I$(INC_FLAGS) -c $@ $< $(GENCODE) 
 
-march_host.o: march_host.cpp march_host.h
+march_host.o: march_host.cpp march_host.h util.h
 	$(CXX) -I$(INC_FLAGS) -c $@ $<
 
 png_proc.o: png_proc.cpp png_proc.h

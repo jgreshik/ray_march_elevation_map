@@ -2,17 +2,18 @@
 #include <cmath>
 
 #include "march_kernel.h"
-
-// -use_fast_math compiler flag 
+#include "util.h"
 
 __device__ double elev_function(double x, double z){
-    return 0;//sin(x)*sin(z);
+//    return 0;
+    return sin(x)*sin(z);
+//    return -1/sqrt((x/2)*(x/2)+(z/2)*(z/2));
 }
 
 __device__ double3 raymarch(double3 pix_pos, double3 pix_dir){
-    double mint=.001;
-    double dt=.01;
-    double max_dist=50;
+    double mint=MIN_T;
+    double dt=DT;
+    double max_dist=MAX_DIST;
     for(double t=mint;t<max_dist;t+=dt){
 
         double pos_x=pix_pos.x+pix_dir.x*t;
@@ -25,6 +26,8 @@ __device__ double3 raymarch(double3 pix_pos, double3 pix_dir){
         return_pos.x=pos_x;
         return_pos.y=pos_y;
         return_pos.z=pos_z;
+
+        dt*=CONSTANT_FACTOR;
 
         if(pos_y<elev_val)return return_pos;
     }
@@ -126,44 +129,3 @@ __global__ void color_pixels(unsigned int*in_png, int in_width, int in_height,
     else if (pos.x>9999) memcpy(&out_png[j*out_width+i],&alpha_zeros,sizeof(unsigned int));
     else memcpy(&out_png[j*out_width+i],&in_png[img_world_j*in_width+img_world_i],sizeof(unsigned int));
 }
-
-//__global__ void color_out(PNGProc in_png,PNGProc out_png){
-//    for(int y = 0; y < out_png.height; y++) {
-//        for(int x = 0; x < out_width; x++) {
-//            vec v=color_pixel(x,y,in_png,out_png);
-//            out_png.set_pixel(v*255,x,y);
-//        }
-//    }
-//}
-
-//double spheresdf(vec pos,double r){
-//    return length(pos)-r;
-//}
-//
-//double scenesdf(vec pos){
-//    double m=spheresdf(pos,1);
-//    return m;
-//}
-//
-//bool raymarch_test(vec pix_pos,vec pix_dir){
-//    vec pos;
-//    pos.x=pix_pos.x;
-//    pos.y=pix_pos.y;
-//    pos.z=pix_pos.z;
-//    for(int i=0;i<256;++i){
-//        double v=scenesdf(pos);
-//        if(v<.001){
-//            return true;
-//        }
-//        pos=pos+pix_dir*v;
-//    }
-//    return false;
-//}
-//
-//__global__ void dummy(int*k){
-//    int j = blockIdx.x*blockDim.x+threadIdx.x;
-//    int i = blockIdx.y*blockDim.y+threadIdx.y;
-//    k[0]+=1;
-//    printf("test: x=%d y=%d\n",i,j);
-//}
-//
