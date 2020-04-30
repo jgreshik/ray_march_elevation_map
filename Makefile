@@ -13,11 +13,17 @@ all: main
 clean:
 	rm -f main *.o
 
-main: main.o png_proc.o vec.o
+main: main.o march_kernel.o march_host.o png_proc.o vec.o 
 	$(CXX) $(OPT_FLAGS) -o $@ $^ $(GENCODE) -L$(INC_FLAGS) -lpng
 
-main.o: main.cu png_proc.o vec.o
+main.o: main.cu march_kernel.o march_host.o png_proc.o vec.o
 	$(CXX) -c $@ $^ $(GENCODE) 
+
+march_kernel.o: march_kernel.cu march_kernel.h
+	$(CXX) -I$(INC_FLAGS) -c $@ $< $(GENCODE) 
+
+march_host.o: march_host.cpp march_host.h
+	$(CXX) -I$(INC_FLAGS) -c $@ $<
 
 png_proc.o: png_proc.cpp png_proc.h
 	$(CXX) -I$(INC_FLAGS) -c $@ $<

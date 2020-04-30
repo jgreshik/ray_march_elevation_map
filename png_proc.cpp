@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdio.h>
 #include <png.h>
+#include <cstring>
+
 #include "png_proc.h"
 
 void PNGProc::read_png_file(char *filename) {
@@ -144,19 +146,37 @@ void PNGProc::allo_mem() {
     }
 }
 
-void PNGProc::process_png_file(float*elev) {
+void PNGProc::png_to_uint_array(unsigned int*data_array){
+    for(int y = 0; y < height; y++) {
+        png_bytep row_add = row_pointers[y];
+        memcpy(&data_array[y*width],&row_add,sizeof(unsigned char)*width);
+    }
+}
+
+void PNGProc::uint_array_to_png(unsigned int*data_array){
+    for(int y = 0; y < height; y++) {
+        png_bytep row_add = row_pointers[y];
+        memcpy(&row_add,&data_array[y*width],sizeof(unsigned char)*width);
+    }
+}
+
+void PNGProc::process_png_file() {
     for(int y = 0; y < height; y++) {
         png_bytep row = row_pointers[y];
         for(int x = 0; x < width; x++) {
             if (y%(height-1)==0 && x%(width-1)==0){
-                png_bytep px = &(row[x * 4]);
-                printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+                //png_bytep px = &(row[x * 4]);
+                for (int k = 0 ; k < 4; ++k){
+                    unsigned int b = row[k];
+                    printf("%4d, %4d = RGBA(%3d)\n", x, y, b);
+                }
+                //printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
             }
-            png_bytep px = &(row[x * 4]);
-            int temp=px[0];
-            row[x*4]=px[2];
-            row[x*4+2]=temp;
-            row[x*4+3]=(int)(row[x*4+3]*elev[width*y+x]);
+//            png_bytep px = &(row[x * 4]);
+//            int temp=px[0];
+//            row[x*4]=px[2];
+//            row[x*4+2]=temp;
+//            row[x*4+3]=(int)(row[x*4+3]*elev[width*y+x]);
         }
     }
 }
