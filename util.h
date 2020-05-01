@@ -7,6 +7,6 @@
 #define DT ((double) 0.001)
 #define MAX_STEPS ((double) MAX_DIST / DT)
 
-#define SCALE_FACTOR ((double) 5.00)
+#define SCALE_FACTOR ((double) 10.00)
 #define FRAC ((double) (1) / (MAX_STEPS))
 #define CONSTANT_FACTOR ((double) pow( SCALE_FACTOR , FRAC ))

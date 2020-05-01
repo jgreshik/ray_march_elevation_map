@@ -11,6 +11,9 @@
 int main(int argc, char *argv[]) {
     if(argc != 6) abort();
 
+    clock_t start, end;
+    start = clock();
+
     PNGProc input;
     int out_height = atoi(argv[3]);
     int out_width = atoi(argv[4]);
@@ -23,14 +26,18 @@ int main(int argc, char *argv[]) {
     
     output.allo_mem();
 
+
     if(atoi(argv[5])==1){
-        printf("Running serial version.\n");
+//        printf("Running serial version.\n");
         color_out(input,output);
         output.write_png_file(argv[2]);
+        end = clock();
+        double elapse_time = double(end - start) / double(CLOCKS_PER_SEC);
+        printf("%6f\n",elapse_time);
         return 0;
     }
 
-    printf("Running parallel version.\n");
+//    printf("Running parallel version.\n");
     
     unsigned int*out_data=nullptr;
     out_data=(unsigned int *)malloc(sizeof(unsigned int) * output.width * output.height);
@@ -55,11 +62,18 @@ int main(int argc, char *argv[]) {
 
     color_pixels<<<num_blocks,threads_per_block>>>(in_data_m, input.width, input.height, 
             out_data_m, output.width, output.height);
-
+   
     cudaMemcpy(out_data,out_data_m,sizeof(unsigned int) * output.width * output.height,cudaMemcpyDeviceToHost);
 
     output.uint_array_to_png(out_data);
     output.write_png_file(argv[2]);
+
+    free(out_data);         free(in_data);  
+    cudaFree(out_data_m);   cudaFree(in_data_m);
+
+    end = clock();
+    double elapse_time = double(end - start) / double(CLOCKS_PER_SEC);
+    printf("%6f\n",elapse_time);
 
     return 0;
 }

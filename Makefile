@@ -1,5 +1,5 @@
 CXX := nvcc
-OPT_FLAGS := -O3 
+OPT_FLAGS := -O3
 INC_FLAGS := /usr/lib/
 # GENCODE for holmes gpu server
 #GENCODE := --expt-relaxed-constexpr -gencode arch=compute_70,code=compute_70 -gencode arch=compute_75,code=compute_75

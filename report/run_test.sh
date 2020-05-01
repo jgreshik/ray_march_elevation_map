@@ -17,7 +17,7 @@ fi
 
 out_file=${output_dir}${out_file}
 
-all_tests=(8 16 32 64 128 256 512 1024 2048 4096 8192)
+all_tests=(8 16 32 64 128 256 512) # 1024 2048 4096 8192)
 if [ ! -d "${output_dir}" ]
 then 
     echo Creating directory ${output_dir}
@@ -26,14 +26,16 @@ fi
 printf "n\t\tgpu_time\t\tcpu_time\n" >> ${out_temp}
 for i in "${all_tests[@]}"
 do
-    name=test_${i}.txt
+    echo Test ${i}
 #    echo $i >> out_cpu.txt
     cpu_out=''
     if [ "$do_serial" == 1 ]
     then
-        cpu_out=$(./main ${data_dir}${test_image_base}${test_image_ext} ${output_dir}${test_image_base}_cpu_${i}_${test_image_ext} ${i} ${i} 1)
+        echo Serial . . . 
+        cpu_out=$(./main ${data_dir}${test_image_base}${test_image_ext} ${output_dir}${test_image_base}_cpu_${i}${test_image_ext} ${i} ${i} 1)
     fi
-    gpu_out=$(./main ${data_dir}${test_image_base}${test_image_ext} ${output_dir}${test_image_base}_gpu_${i}_${test_image_ext} ${i} ${i} 0)
+    echo Parallel . . . 
+    gpu_out=$(./main ${data_dir}${test_image_base}${test_image_ext} ${output_dir}${test_image_base}_gpu_${i}${test_image_ext} ${i} ${i} 0)
     line="${i}\t\t${gpu_out}\t\t${cpu_out}\n"
     printf $line >> ${out_temp}
 done
