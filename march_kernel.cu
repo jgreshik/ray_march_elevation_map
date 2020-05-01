@@ -1,4 +1,3 @@
-#include <cuda_runtime_api.h>
 #include <cmath>
 
 #include "march_kernel.h"

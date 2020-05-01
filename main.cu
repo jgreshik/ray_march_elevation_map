@@ -1,7 +1,4 @@
-#include <cuda_runtime_api.h>
 #include <png.h>
-#include <stdlib.h>
-#include <iostream>
 #include <stdio.h>
 
 #include "png_proc.h"

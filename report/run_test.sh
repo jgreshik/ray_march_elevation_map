@@ -41,3 +41,4 @@ do
 done
 column -t ${out_temp} > ${out_file}
 rm ${out_temp}
+popd
