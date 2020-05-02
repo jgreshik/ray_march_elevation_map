@@ -20,10 +20,10 @@ After building, run the program using the following command format
 ```
 The `do serial` flag tells the program to either run the serial CPU implementation, or the parallel GPU implementation. Pass `1` for CPU, `0` for the screamin' demon GPU implementation.  
 
-To run the program with the provided test image, `squares.png`, using the GPU implementation, you would run
+To run the program with the provided test image `squares.png` using the GPU implementation to get an output image that was 1024x1024 pixels, you would run
 
 ```
-./main ./data/squares.png output.png 0
+./main ./data/squares.png output.png 1024 1024 0
 ```
 
 #### Have Fun
