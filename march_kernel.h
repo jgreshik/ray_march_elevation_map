@@ -1,6 +1,6 @@
 #pragma once
 
-#define NUM_THREADS 32 
+#define NUM_THREADS 32
 
 __device__ double elev_function(double x, double z);
 
