@@ -2,7 +2,9 @@
 
 Ray marching technique for generating images of a 3D functions with an input image texture using `C` and `CUDA`.
 
-<img src='./data/squares_cpu_8192.png' align="center" width=1024>
+squares_cpu_8192           | lena
+:-------------------------:|:-------------------------:
+<img src='./data/squares_cpu_8192.png' align="left" width=256> | <img src='./data/lena.png' align="right" width=256>
 
 ### Build Source
 To build the project from source, be in the top level directory of this repository and run
