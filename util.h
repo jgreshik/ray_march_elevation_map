@@ -10,3 +10,11 @@
 #define SCALE_FACTOR ((double) 10.00)
 #define FRAC ((double) (1) / (MAX_STEPS))
 #define CONSTANT_FACTOR ((double) pow( SCALE_FACTOR , FRAC ))
+
+#define LOOKATX ((double) 0.) 
+#define LOOKATY ((double) 0.)
+#define LOOKATZ ((double) 0.)
+
+#define CAMERAX ((double) 0.)
+#define CAMERAY ((double) 6.)
+#define CAMERAZ ((double) 2.)

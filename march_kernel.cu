@@ -7,6 +7,7 @@ __device__ double elev_function(double x, double z){
 //    return 0;
     return sin(x)*sin(z);
 //    return -1/sqrt((x/2)*(x/2)+(z/2)*(z/2));
+//    return cos(sqrt(3*(x*x+z*z)))/2;
 }
 
 __device__ double3 raymarch(double3 pix_pos, double3 pix_dir){
@@ -51,13 +52,13 @@ __global__ void color_pixels(unsigned int*in_png, int in_width, int in_height,
     y*=-2;
 
     double3 eye;
-    eye.x=3.;
-    eye.y=4.;
-    eye.z=3.;
+    eye.x=CAMERAX;
+    eye.y=CAMERAY;
+    eye.z=CAMERAZ;
     double3 lookat;
-    lookat.x=0.;
-    lookat.y=0.;
-    lookat.z=0.;
+    lookat.x=LOOKATX;
+    lookat.y=LOOKATY;
+    lookat.z=LOOKATZ;
 
     //double3 eye_dir=normalize(lookat-eye);
     double3 eye_dir;

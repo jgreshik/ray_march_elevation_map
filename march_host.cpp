@@ -31,8 +31,8 @@ vec color_pixel(int i,int j, PNGProc in_png, PNGProc out_png){
     x*=2;
     y*=-2;
 
-    vec eye(3,4,3);
-    vec lookat(0,0,0);
+    vec eye(CAMERAX,CAMERAY,CAMERAZ);
+    vec lookat(LOOKATX,LOOKATY,LOOKATZ);
 
     vec eye_dir=normalize(lookat-eye);
     double focal_length=1;
