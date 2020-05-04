@@ -1,6 +1,6 @@
 # Texture Elevation Mapping by Parallel Ray Marching
 
-Ray marching technique for generating images of a 3D functions with an input image texture using `C++` and `CUDA`.
+Ray marching technique for generating images of a 3D function with an input image texture using `C++` and `CUDA`.
 
 squares_cpu_8192           | lena_ripples
 :-------------------------:|:-------------------------:
