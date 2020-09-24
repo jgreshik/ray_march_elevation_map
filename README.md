@@ -30,4 +30,4 @@ To run the program with the provided test image `squares.png` using the GPU impl
 
 #### Have Fun
 
-I really enjoyed making this and trying all sorts of 3D functions and textures out. You can edit the 3D camera and ray marching parameters in `util.h`, and the GPU settings in both the `Makefile` or `march_kernel.h`. Elevation functions can be defined in `march_kernel.h` and `march_host.cpp`.
+You can edit the 3D camera and ray marching parameters in `util.h`, and the GPU settings in both the `Makefile` or `march_kernel.h`. Elevation functions can be defined in `march_kernel.h` and `march_host.cpp`.
